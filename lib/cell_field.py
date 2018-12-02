@@ -78,13 +78,15 @@ class Cell_Field:
 
 			for v in range( len( self.regions ) ):
 
-				if self.regions[u].shares_edge( self.regions[v] ):
+				if not self.regions[v].obstacle:
 
-					if u not in self.nav_graph.edges:
+					if self.regions[u].shares_edge( self.regions[v] ):
 
-						self.nav_graph.edges[u] = []
+						if u not in self.nav_graph.edges:
 
-					self.nav_graph.edges[u].append( v )
+							self.nav_graph.edges[u] = []
+
+						self.nav_graph.edges[u].append( v )
 
 
 	def navigate( self, a, b ):
@@ -118,15 +120,21 @@ class Cell_Field:
 
 if __name__ == '__main__':
 
-	c = Cell_Field( 300, 300 )
+	# Create a cell field
+	c = Cell_Field( 300, 300 ) # Cell_Field( w, h )
 
-	c.obstacles.append( Region( 100, 100, 100, 100 ) )
+	# Add an obstacle
+	c.obstacles.append( Region( 100, 100, 100, 100 ) ) # Region( x, y, w, h )
 
+	# Modify an obstacle by direct access
+	# c.obstacles[0] = ...
+
+	# Call these two again if you move an obstacle
 	c.determine_regions()
-
 	c.construct_graph()
 
-	print c.navigate( Point(30,30), Point(270,270) )
+	# Returns a list of points which take you from a to b without crossing an obstacle
+	print c.navigate( Point(20,150), Point(270,150) )
 
 
 
